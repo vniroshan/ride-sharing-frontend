@@ -29,7 +29,7 @@ const routes = [
     component: LayoutMain,
     beforeEnter: multiguard([notLoggedIn]),
     children: [
-       {
+      {
         path: "",
         name: "HomeView",
         component: () =>
@@ -78,7 +78,19 @@ const routes = [
     path: "/",
     component: LayoutMain,
     children: [
-        {
+      {
+        path: "rides",
+        name: "RideListView",
+        component: () =>
+          import(
+            /* webpackChunkName: "ride-list-view" */ "@/views/RideListView.vue"
+          ),
+        props: true,
+        meta: {
+          title: "Rides",
+        },
+      },
+      {
         path: "privacy-policy",
         name: "PrivacyPolicyView",
         component: () =>
@@ -90,7 +102,7 @@ const routes = [
           title: "Privacy Policy",
         },
       },
-       {
+      {
         path: "terms-of-service",
         name: "TermsOfServiceView",
         component: () =>

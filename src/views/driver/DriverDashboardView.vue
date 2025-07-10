@@ -5,7 +5,7 @@
     <!-- EOC -->
 
     <div class="mb-4">
-      <h2>Welcome back, {{ account.first_name }} {{ account.last_name }}!</h2>
+      <h2>Welcome, {{ account.first_name }} {{ account.last_name }}!</h2>
     </div>
   </v-container>
 </template>
