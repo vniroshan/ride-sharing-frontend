@@ -1,13 +1,20 @@
 import Vue from 'vue'
 import App from './App.vue'
-import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import _ from 'lodash'
 import moment from 'moment'
-import axios from 'axios'
+
+import './registerServiceWorker'
+// import './assets/css/app.css';
+
+
 
 Vue.config.productionTip = false
+
+import axios from 'axios'
+Vue.prototype.$axios = axios
 
 var api = {
   servers: {
@@ -72,12 +79,18 @@ var api = {
     }
   },
 }
-Vue.prototype.$api = api
-Vue.prototype.$axios = axios
-Vue.prototype.$moment = moment
+
 Vue.component('AError', require('./components/AError.vue').default);
 Vue.component('ABreadcrumb', require('./components/ABreadcrumb.vue').default);
 
+Vue.prototype.$api = api
+//EOC
+//BOC
+Vue.prototype.$_ = _
+//EOC
+//BOC
+Vue.prototype.$moment = moment
+//EOC
 new Vue({
   router,
   store,
