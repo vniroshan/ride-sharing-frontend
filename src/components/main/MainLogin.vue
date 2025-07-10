@@ -11,7 +11,7 @@
       :callbackReset="() => (apiCheckOtp.isError = false)"
     ></AError>
 
-    <v-row class="justify-center mt-6 align-center">
+     <v-row justify="center" align="center" class="fill-height">
       <v-col cols="12" sm="6" md="4">
         <v-card class="pa-6" elevation="8">
           <v-card-title class="text-center mb-4">
@@ -307,7 +307,9 @@ export default {
 .w-100 {
   width: 100%;
 }
-
+.fill-height {
+  min-height: 80vh;
+}
 @media (max-width: 600px) {
   .v-card {
     margin: 16px;
