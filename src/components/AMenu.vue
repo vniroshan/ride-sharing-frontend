@@ -152,6 +152,12 @@ export default {
       permission: 0,
     });
     this.menu.push({
+      name: "Create Ride",
+      icon: "mdi-car-plus",
+      route: { name: "RideCreationView" },
+      permission: 0,
+    });
+    this.menu.push({
       name: "Log Out",
       icon: "mdi-exit-run",
       route: { name: "LogoutView" },

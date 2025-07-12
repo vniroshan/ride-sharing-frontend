@@ -158,7 +158,7 @@ export default {
     // Validation rules
     mobileRules: [
       v => !!v || 'Mobile number is required',
-      v => /^\d{10}$/.test(v) || 'Mobile number must be 10 digits',
+      v => /^\d{11}$/.test(v) || 'Mobile number must be 11 digits',
     ],
     otpRules: [
       v => !!v || 'OTP is required',
