@@ -6,6 +6,19 @@
 
     <div class="mb-4">
       <h2>Welcome, {{ account.first_name }} {{ account.last_name }}!</h2>
+      <div class="text-center">
+        <v-btn
+        color="#0074e7"
+        class="post-ride-btn mt-3"
+        large
+        block
+        width="80%"
+        :to="{name: 'RideCreationView'}"
+      >
+        Post New Ride
+      </v-btn>
+      </div>
+    
     </div>
   </v-container>
 </template>
@@ -64,6 +77,16 @@ export default {
 .v-card[outlined] {
   border: 1px solid #e0e0e0;
   background-color: #fafafa;
+}
+
+.post-ride-btn {
+  background: #0074e7 !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  min-width: 180px;
+  box-shadow: 0 2px 8px rgba(0,116,231,0.08);
 }
 
 /* Responsive adjustments for date filter */

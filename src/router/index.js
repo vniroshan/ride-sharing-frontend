@@ -64,6 +64,18 @@ const routes = [
         },
       },
       {
+        path: "create-ride",
+        name: "RideCreationView",
+        component: () =>
+          import(
+            /* webpackChunkName: "ride-creation-view" */ "@/views/RideCreationView.vue"
+          ),
+        props: true,
+        meta: {
+          title: "Create Ride",
+        },
+      },
+      {
         path: "logout",
         name: "LogoutView",
         component: () =>
@@ -90,6 +102,7 @@ const routes = [
           title: "Rides",
         },
       },
+     
       {
         path: "privacy-policy",
         name: "PrivacyPolicyView",
