@@ -116,6 +116,26 @@ const routes = [
         },
       },
       {
+  path: "records",
+  name: "DriverRecordsView",
+  component: () => import(
+    /* webpackChunkName: "driver-records-view" */ "@/views/driver/DriverRecordsView.vue"
+  ),
+  meta: {
+    title: "Driver Records",
+  },
+},
+{
+  path: "records/:id",
+  name: "DriverRecordDetailView",
+  component: () => import(
+    /* webpackChunkName: "driver-record-detail" */ "@/views/driver/DriverRecordDetailView.vue"
+  ),
+  meta: {
+    title: "Driver Details",
+  },
+},
+      {
         path: "terms-of-service",
         name: "TermsOfServiceView",
         component: () =>
