@@ -1,5 +1,5 @@
 <template>
-  <v-container class="driver-reg-bg" fluid>
+  <v-container v-if="!isRegistred" class="driver-reg-bg" fluid>
     <v-row justify="center">
       <v-col cols="12" md="8" lg="6">
         <v-card class="driver-reg-card" elevation="2">
@@ -193,7 +193,7 @@
                     color="primary"
                     class="register-btn"
                     large
-                    :disabled="!valid"
+                   
                     @click="registerDriver"
                   >
                     Register Now
@@ -206,12 +206,17 @@
       </v-col>
     </v-row>
   </v-container>
+  <v-container v-else class="detail-container">
+   <div>Registred</div>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: 'DriverReg',
   data: () => ({
+    isRegistred: false,
+    driver:null,
     valid: false,
     driverForm: {
       fullName: '',
@@ -252,7 +257,8 @@ export default {
       }
     },
     registerDriver() {
-      if (!this.$refs.form.validate()) return;
+      this.isRegistred =true
+      //if (!this.$refs.form.validate()) return;
       
       // Combine form data
       const formData = {

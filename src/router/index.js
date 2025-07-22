@@ -64,6 +64,13 @@ const routes = [
           import(/* webpackChunkName: "login-view" */ "@/views/LoginView.vue"),
         props: true,
       },
+       {
+        path: "/register",
+        name: "DriverRegView",
+        component: () =>
+          import(/* webpackChunkName: "register-view" */ "@/views/DriverRegView.vue"),
+        props: true,
+      },
     ],
   },
   {
@@ -150,7 +157,7 @@ const routes = [
   path: "records/:id",
   name: "DriverRecordDetailView",
   component: () => import(
-    /* webpackChunkName: "driver-record-detail" */ "@/views/driver/DriverRecordDetailView.vue"
+    /* webpackChunkName: "driver-record-detail" */ "@/views/driver/DriverRecordsView.vue"
   ),
   meta: {
     title: "Driver Details",
