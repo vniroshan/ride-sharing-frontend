@@ -6,17 +6,17 @@
       :callbackReset="() => (api.isError = false)"
     ></AError>
 
-    <v-overlay :value="loading">
+    <v-overlay :value="api.isLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-  <h3 class="text-left mb-6">Find the seat for your journey...!</h3>
+    <h3 class="text-left mb-6">Find the seat for your journey...!</h3>
     <v-card outlined class="mb-6" flat elevation="2">
       <v-card-text>
         <!-- Search Form -->
-        <v-row  justify="center">
+        <v-row justify="center">
           <v-col cols="12" md="3">
             <v-text-field
-              v-model="searchForm.from"
+              v-model="from"
               label="From"
               outlined
               dense
@@ -26,7 +26,7 @@
           </v-col>
           <v-col cols="12" md="3">
             <v-text-field
-              v-model="searchForm.to"
+              v-model="to"
               label="To"
               outlined
               dense
@@ -37,7 +37,7 @@
           </v-col>
           <v-col cols="12" md="3">
             <v-text-field
-              v-model="searchForm.date"
+              v-model="date"
               label="Date"
               type="date"
               outlined
@@ -49,10 +49,11 @@
           </v-col>
           <v-col cols="12" md="2">
             <v-btn
-              @click="searchRides"
+              @click="fetchRides"
               color="primary"
               large
               block
+              :loading="api.isLoading"
               elevation="2"
               class="search-btn"
             >
@@ -68,11 +69,11 @@
       <v-card-title class="section-title justify-center">
         <h2 class="text-h4 primary--text">Upcoming Rides</h2>
       </v-card-title>
-      
+
       <v-card-text>
         <v-row>
           <v-col
-            v-for="ride in filteredRides"
+            v-for="ride in rides"
             :key="ride.id"
             cols="12"
             class="ride-item"
@@ -86,20 +87,22 @@
                       <v-icon size="40" color="primary">mdi-car</v-icon>
                     </v-avatar>
                   </v-col>
-                  
+
                   <!-- Ride Details -->
                   <v-col cols="12" md="6">
-                    <div class="ride-route text-h6 primary--text font-weight-bold mb-2">
+                    <div
+                      class="ride-route text-h6 primary--text font-weight-bold mb-2"
+                    >
                       {{ ride.from }} to {{ ride.to }}
                     </div>
                     <div class="ride-info grey--text text--darken-1">
                       <div class="mb-1">
                         <v-icon small class="mr-1">mdi-calendar-clock</v-icon>
-                        {{ ride.date }} Departure around {{ ride.time }}
+                        {{ ride.departure_date }} Departure around {{ ride.departure_time }}
                       </div>
                       <div class="mb-2">
                         <v-icon small class="mr-1">mdi-car-info</v-icon>
-                        {{ ride.vehicleDetails }}
+                        {{ ride.vehicles.vehicle_no }} - {{ ride.vehicles.type }}
                       </div>
                       <v-chip
                         small
@@ -108,16 +111,18 @@
                         class="mr-2"
                       >
                         <v-icon left small>mdi-account-group</v-icon>
-                        {{ ride.seatsAvailable }} Seats Available
+                        {{ ride.available_seat_count }} Seats Available
                       </v-chip>
                     </div>
                   </v-col>
-                  
+
                   <!-- Price and Book Button -->
                   <v-col cols="12" md="4" class="text-center">
                     <div class="ride-price">
-                      <div class="price-amount text-h3 primary--text font-weight-bold">
-                        £{{ ride.price }}
+                      <div
+                        class="price-amount text-h3 primary--text font-weight-bold"
+                      >
+                        £{{ ride.charge_per_seat }}
                       </div>
                       <div class="price-per grey--text text--darken-1 mb-3">
                         /seat
@@ -139,8 +144,8 @@
             </v-card>
           </v-col>
         </v-row>
-        
-        <v-row v-if="filteredRides.length === 0" justify="center">
+
+        <v-row v-if="rides.length === 0" justify="center">
           <v-col cols="12" class="text-center">
             <v-icon size="64" color="grey lighten-1">mdi-car-off</v-icon>
             <h3 class="text-h5 grey--text mt-4">No rides found</h3>
@@ -156,74 +161,15 @@
 export default {
   data: () => ({
     loading: false,
-    rides: [
-      {
-        id: 1,
-        from: 'Coventry',
-        to: 'Birmingham',
-        date: '25/08/2025',
-        time: '08:00 AM',
-        vehicleDetails: 'CN11KJG - BMW X7 Black',
-        seatsAvailable: 2,
-        price: 7
-      },
-      {
-        id: 2,
-        from: 'Coventry',
-        to: 'Milton Keynes',
-        date: '25/08/2025',
-        time: '08:00 AM',
-        vehicleDetails: 'NJ40KJG - BMW 2 series White',
-        seatsAvailable: 3,
-        price: 10
-      },
-      {
-        id: 3,
-        from: 'Coventry',
-        to: 'London',
-        date: '25/08/2025',
-        time: '09:00 AM',
-        vehicleDetails: 'TJ11HJU - Audi A5 White',
-        seatsAvailable: 1,
-        price: 12
-      },
-      {
-        id: 4,
-        from: 'Coventry',
-        to: 'Leeds',
-        date: '25/08/2025',
-        time: '08:30 AM',
-        vehicleDetails: 'NL75LJP - Audi Q5 Black',
-        seatsAvailable: 2,
-        price: 30
-      },
-      {
-        id: 5,
-        from: 'Manchester',
-        to: 'Liverpool',
-        date: '26/08/2025',
-        time: '10:00 AM',
-        vehicleDetails: 'MN67ABC - Mercedes C-Class Silver',
-        seatsAvailable: 4,
-        price: 8
-      },
-      {
-        id: 6,
-        from: 'London',
-        to: 'Brighton',
-        date: '27/08/2025',
-        time: '11:30 AM',
-        vehicleDetails: 'LB82XYZ - Tesla Model 3 Blue',
-        seatsAvailable: 3,
-        price: 15
-      }
-    ],
+    rides: [],
     searchForm: {
-      from: '',
-      to: '',
-      date: ''
+      from: "",
+      to: "",
+      date: "",
     },
-
+    date: "",
+    from: "",
+    to: "",
     // API configurations
     api: {
       isLoading: false,
@@ -233,91 +179,16 @@ export default {
     },
   }),
 
-  computed: {
-    filteredRides() {
-      return this.rides.filter(ride => {
-        const matchesFrom = !this.searchForm.from || 
-          ride.from.toLowerCase().includes(this.searchForm.from.toLowerCase());
-        const matchesTo = !this.searchForm.to || 
-          ride.to.toLowerCase().includes(this.searchForm.to.toLowerCase());
-        const matchesDate = !this.searchForm.date || 
-          this.formatDate(ride.date) === this.searchForm.date;
-        
-        return matchesFrom && matchesTo && matchesDate;
-      });
-    }
-  },
+  computed: {},
 
   created() {
-    //this.fetchRides();
-    this.rides = [
-      {
-        id: 1,
-        from: 'Coventry',
-        to: 'Birmingham',
-        date: '14/07/2025',
-        time: '08:00 AM',
-        vehicleDetails: 'CN11KJG - BMW X7 Black',
-        seatsAvailable: 2,
-        price: 7
-      },
-      {
-        id: 2,
-        from: 'Coventry',
-        to: 'Milton Keynes',
-        date: '14/07/2025',
-        time: '08:00 AM',
-        vehicleDetails: 'NJ40KJG - BMW 2 series White',
-        seatsAvailable: 3,
-        price: 10
-      },
-      {
-        id: 3,
-        from: 'Coventry',
-        to: 'London',
-        date: '14/07/2025',
-        time: '09:00 AM',
-        vehicleDetails: 'TJ11HJU - Audi A5 White',
-        seatsAvailable: 1,
-        price: 12
-      },
-      {
-        id: 4,
-        from: 'Coventry',
-        to: 'Leeds',
-        date: '15/07/2025',
-        time: '08:30 AM',
-        vehicleDetails: 'NL75LJP - Audi Q5 Black',
-        seatsAvailable: 2,
-        price: 30
-      },
-      {
-        id: 5,
-        from: 'Manchester',
-        to: 'Liverpool',
-        date: '15/07/2025',
-        time: '10:00 AM',
-        vehicleDetails: 'MN67ABC - Mercedes C-Class Silver',
-        seatsAvailable: 4,
-        price: 8
-      },
-      {
-        id: 6,
-        from: 'London',
-        to: 'Brighton',
-        date: '15/07/2025',
-        time: '11:30 AM',
-        vehicleDetails: 'LB82XYZ - Tesla Model 3 Blue',
-        seatsAvailable: 3,
-        price: 15
-      }
-    ]
+    this.fetchRides();
   },
 
   mounted() {
     // Initialize with current date
     const today = new Date();
-    this.searchForm.date = today.toISOString().split('T')[0];
+    this.date = today.toISOString().split("T")[0];
   },
 
   beforeDestroy() {
@@ -327,7 +198,7 @@ export default {
   methods: {
     fetchRides() {
       this.api.method = "GET";
-      this.api.url = `${this.$api.servers.backend}/api/v1/main/rides`;
+      this.api.url = `${this.$api.servers.backend}/api/v1/passenger/rides/all?date=${this.date}&to=${this.to}&from=${this.from}`;
       this.api.callbackReset = () => {
         this.api.isLoading = true;
         this.api.isError = false;
@@ -340,11 +211,11 @@ export default {
       };
       this.api.callbackSuccess = (resp) => {
         this.api.isLoading = false;
-        console.log(resp)
+        console.log(resp);
         this.rides = resp;
       };
       // Uncomment when API is ready
-      // this.$api.fetch(this.api);
+      this.$api.fetch(this.api);
     },
 
     searchRides() {
@@ -352,28 +223,30 @@ export default {
       // Simulate API call for search
       setTimeout(() => {
         this.loading = false;
-        console.log('Searching for rides:', this.searchForm);
+        console.log("Searching for rides:", this.searchForm);
       }, 1000);
     },
 
     bookRide(ride) {
-      this.$router.push({name:"RideReadView",params:{id:ride.id}})
+      this.$router.push({ name: "RideReadView", params: { id: ride.id } });
     },
 
     formatDate(dateString) {
       // Convert DD/MM/YYYY to YYYY-MM-DD for input[type="date"]
-      const parts = dateString.split('/');
+      const parts = dateString.split("/");
       if (parts.length === 3) {
-        return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        return `${parts[2]}-${parts[1].padStart(2, "0")}-${parts[0].padStart(
+          2,
+          "0"
+        )}`;
       }
       return dateString;
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-
 .ride-card {
   border-radius: 12px !important;
   transition: all 0.3s ease;
@@ -382,7 +255,7 @@ export default {
 
 .ride-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
 }
 
 .ride-route {
@@ -421,7 +294,6 @@ export default {
 
 /* Mobile responsive adjustments */
 @media (max-width: 960px) {
-  
   .ride-price {
     margin-top: 16px;
   }
