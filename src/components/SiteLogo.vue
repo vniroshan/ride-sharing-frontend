@@ -5,9 +5,9 @@
         alt="Vuetify Logo"
         class="shrink mr-2 logo-white"
         contain
-        :src="require('@/assets/logo_main.png')"
+        :src="require('@/assets/Logo_original.png')"
         transition="scale-transition"
-        width="120"
+        width="70"
       />
       <!-- <v-chip small class="mr-1 d-none d-sm-flex">{{ $version }}</v-chip> -->
     </div>

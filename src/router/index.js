@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import LayoutMain from "../layouts/LayoutMain.vue";
-// import LayoutBlank from "../layouts/LayoutBlank.vue";
+import LayoutBlank from "../layouts/LayoutBlank.vue";
 // import LayoutConsole from "../layouts/LayoutConsole.vue";
 
 //BOC:[state]
@@ -24,6 +24,20 @@ const notLoggedIn = function (to, from, next) {
 Vue.use(VueRouter);
 
 const routes = [
+   {
+    path: "/",
+    component: LayoutBlank,
+    beforeEnter: multiguard([notLoggedIn]),
+    children: [
+      {
+        path: "",
+        name: "HomeView",
+        component: () =>
+          import(/* webpackChunkName: "home-view" */ "@/views/HomeView.vue"),
+        props: true,
+      },
+    ],
+  },
   {
     path: "/",
     component: LayoutMain,
@@ -34,6 +48,13 @@ const routes = [
         name: "HomeView",
         component: () =>
           import(/* webpackChunkName: "home-view" */ "@/views/HomeView.vue"),
+        props: true,
+      },
+       {
+        path: "/book",
+        name: "PassengerBooking",
+        component: () =>
+          import(/* webpackChunkName: "book-view" */ "@/views/PassengerBookingView.vue"),
         props: true,
       },
       {

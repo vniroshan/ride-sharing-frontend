@@ -1,6 +1,13 @@
 <template>
   <v-app>
-    <v-main class="cyan lighten-5 no-app-bar">
+    <v-main class="no-app-bar" :style="{backgroundImage: `url(${require('@/assets/skyline.png')})`,
+    backgroundSize: 'cover' ,
+    backgroundopacity:'0.5', 
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition:'center',
+    height:'100vh',
+    width:'100vw'}"
+    >
       <router-view/>
     </v-main>
   </v-app>
