@@ -15,10 +15,10 @@ const vuexCookie = new VuexPersistence({
 	restoreState: (key) => Cookies.get(key),
 	saveState: (key, state) =>
 		Cookies.set(key, state, {
-			expires: 30, // expire in 30 days
+			expires: 30, 
 		}),
 	modules:[
-		//
+		
 	],
 });
 const vuexLocal = new VuexPersistence({
