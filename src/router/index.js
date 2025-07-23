@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import LayoutMain from "../layouts/LayoutMain.vue";
 import LayoutBlank from "../layouts/LayoutBlank.vue";
 // import LayoutConsole from "../layouts/LayoutConsole.vue";
+import DriverVehicles from '@/views/driver/DriverVehicles.vue';
 
 //BOC:[state]
 import store from "./../store/index";
@@ -104,6 +105,15 @@ const routes = [
         },
       },
       {
+  path: '/driver/vehicles',
+  name: 'DriverVehiclesView',
+  component: DriverVehicles,
+  meta: { 
+    requiresAuth: true,
+    role: 'driver' 
+  }
+},
+      {
         path: "logout",
         name: "LogoutView",
         component: () =>
@@ -112,6 +122,7 @@ const routes = [
           ),
         props: true,
       },
+      
     ],
   },
   {
@@ -155,7 +166,7 @@ const routes = [
 },
 {
   path: "records/:id",
-  name: "DriverRecordDetailView",
+  name: "DriverRecordsView",
   component: () => import(
     /* webpackChunkName: "driver-record-detail" */ "@/views/driver/DriverRecordsView.vue"
   ),
