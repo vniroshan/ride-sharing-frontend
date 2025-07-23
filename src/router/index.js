@@ -50,6 +50,15 @@ const routes = [
           import(/* webpackChunkName: "home-view" */ "@/views/HomeView.vue"),
         props: true,
       },
+
+      {
+        path: "/manage",
+        name: "ManageView",
+        component: () =>
+          import(/* webpackChunkName: "Manage-view" */ "@/views/ManagevView.vue"),
+        props: true,
+      },
+
        {
         path: "/book",
         name: "PassengerBooking",
