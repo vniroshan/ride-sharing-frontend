@@ -11,104 +11,118 @@
       :callbackReset="() => (apiCheckOtp.isError = false)"
     ></AError>
 
-     <v-row justify="center" align="center" class="fill-height">
+    <v-row justify="center" align="center" class="fill-height">
       <v-col cols="12" sm="6" md="4">
         <v-card class="pa-6" elevation="8">
-          <v-card-title class="text-center mb-4">
-            <h2 class="text-h4 font-weight-bold primary--text">Driver Login</h2>
-          </v-card-title>
-          
-          <v-card-text>
-            <!-- Step 1: Mobile Number Input -->
-            <div v-if="!otpSent">
-              <v-text-field
-                v-model="mobile_no"
-                label="Mobile Number"
-                prepend-icon="mdi-phone"
-                type="tel"
-                :rules="mobileRules"
-                placeholder="Enter your mobile number"
-                outlined
-                dense
-                :disabled="apiSendOtp.isLoading"
-                @keyup.enter="sendOtp"
-              ></v-text-field>
-              
-              <v-btn
-                @click="sendOtp"
-                :loading="apiSendOtp.isLoading"
-                :disabled="!mobile_no || mobile_no.length < 10"
-                color="primary"
-                block
-                large
-                class="mt-4"
-              >
-                Send OTP
-              </v-btn>
+          <div v-if="!otpSent">
+            <div class="text-center mx-auto">
+              <v-img
+                class="mx-auto"
+                contain
+                :src="require('@/assets/lock.png')"
+                transition="scale-transition"
+                width="60"
+              />
             </div>
 
-            <!-- Step 2: OTP Input -->
-            <div v-else>
-              <v-alert
-                type="info"
-                outlined
-                dense
-                class="mb-4"
-              >
-                OTP sent to {{ mobile_no }}
-              </v-alert>
-              
-              <v-text-field
-                v-model="otp"
-                label="Enter OTP"
-                prepend-icon="mdi-lock"
-                type="number"
-                :rules="otpRules"
-                placeholder="Enter 6-digit OTP"
-                outlined
-                dense
-                maxlength="6"
-                :disabled="apiCheckOtp.isLoading"
-                @keyup.enter="checkOtp"
-              ></v-text-field>
-              
-              <v-btn
-                @click="checkOtp"
-                :loading="apiCheckOtp.isLoading"
-                :disabled="!otp || otp.length !== 6"
-                color="primary"
-                block
-                large
-                class="mt-4"
-              >
-                Verify OTP
-              </v-btn>
-              
-              <div class="text-center mt-4">
-                <v-btn
-                  @click="resendOtp"
-                  :disabled="resendTimer > 0 || apiSendOtp.isLoading"
-                  text
-                  small
-                  color="primary"
-                >
-                  {{ resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP' }}
-                </v-btn>
-              </div>
-              
-              <div class="text-center mt-2">
-                <v-btn
-                  @click="changeNumber"
-                  text
-                  small
-                  color="secondary"
-                >
-                  Change Mobile Number
-                </v-btn>
-              </div>
+            <div class="text-center pt-3">
+              Are you a registered driver with our ride sharing app?
             </div>
-          </v-card-text>
-          
+            <v-card-text>
+              <!-- Step 1: Mobile Number Input -->
+              <div>
+                <v-text-field
+                  v-model="mobile_no"
+                  label="Enter your mobile number"
+                  :rules="mobileRules"
+                  placeholder="Enter your mobile number"
+                  outlined
+                  dense
+                  :disabled="apiSendOtp.isLoading"
+                  @keyup.enter="sendOtp"
+                ></v-text-field>
+
+                <v-btn
+                  @click="sendOtp"
+                  :loading="apiSendOtp.isLoading"
+                  :disabled="!mobile_no || mobile_no.length < 10"
+                  color="primary"
+                  block
+                  large
+                  width="80"
+                >
+                  Send OTP
+                </v-btn>
+
+                <div class="grey--text text-center pt-3">
+                  Not registered yet?
+                </div>
+                <div class="text-center">
+                  <v-btn color="primary"  text
+                    small >
+                    Click to register now</v-btn
+                  >
+                </div>
+              </div>
+            </v-card-text>
+          </div>
+          <div v-if="otpSent">
+            <div class="text-center mx-auto">
+              <v-img
+                class="mx-auto"
+                contain
+                :src="require('@/assets/otp.png')"
+                transition="scale-transition"
+                width="60"
+              />
+            </div>
+
+            <div class="text-center pt-3">
+              Enter OTP to verify your Mobile Number. We've sent a 6-digit OTP
+              to {{ mobile_no }}.
+            </div>
+            <v-card-text>
+              <div>
+                <v-otp-input  v-model="otp" :rules="otpRules" outlined
+                  dense length="6"  :disabled="apiCheckOtp.isLoading"
+                  @keyup.enter="checkOtp"></v-otp-input>
+                <v-btn
+                  @click="checkOtp"
+                  :loading="apiCheckOtp.isLoading"
+                  :disabled="!otp || otp.length !== 6"
+                  color="primary"
+                  block
+                  large
+                  class="mt-4"
+                >
+                  Verify OTP
+                </v-btn>
+
+                <div class="text-center mt-4">
+                  <v-btn
+                    @click="resendOtp"
+                    :disabled="resendTimer > 0 || apiSendOtp.isLoading"
+                    text
+                    small
+                    color="primary"
+                  >
+                    {{
+                      resendTimer > 0
+                        ? `Resend OTP in ${resendTimer}s`
+                        : "Resend OTP"
+                    }}
+                  </v-btn>
+                </div>
+
+                <div class="text-center mt-2">
+                  <v-btn @click="changeNumber" text small color="secondary">
+                    Change Mobile Number
+                  </v-btn>
+                </div>
+              </div>
+            </v-card-text>
+          </div>
+
           <!-- Privacy Policy & Terms -->
           <v-card-actions class="px-6 pb-6">
             <div class="text-center w-100">
@@ -154,17 +168,17 @@ export default {
     otpSent: false,
     resendTimer: 0,
     resendInterval: null,
-    
+
     // Validation rules
     mobileRules: [
-      v => !!v || 'Mobile number is required',
-      v => /^\d{11}$/.test(v) || 'Mobile number must be 11 digits',
+      (v) => !!v || "Mobile number is required",
+      (v) => /^\d{11}$/.test(v) || "Mobile number must be 11 digits",
     ],
     otpRules: [
-      v => !!v || 'OTP is required',
-      v => /^\d{6}$/.test(v) || 'OTP must be 6 digits',
+      (v) => !!v || "OTP is required",
+      (v) => /^\d{6}$/.test(v) || "OTP must be 6 digits",
     ],
-    
+
     // API configurations
     apiSendOtp: {
       isLoading: false,
@@ -192,10 +206,10 @@ export default {
 
   methods: {
     sendOtp() {
-      if (!this.mobile_no || this.mobile_no.length < 10) {
+      if (!this.mobile_no || this.mobile_no.length < 11) {
         return;
       }
-      
+
       this.apiSendOtp.url = `${this.$api.servers.backend}/api/v1/driver/auth/send-otp`;
       this.apiSendOtp.callbackReset = () => {
         this.apiSendOtp.isLoading = true;
@@ -216,12 +230,12 @@ export default {
       this.apiSendOtp.params = { mobile_no: this.mobile_no };
       this.$api.fetch(this.apiSendOtp);
     },
-    
+
     checkOtp() {
       if (!this.otp || this.otp.length !== 6) {
         return;
       }
-      
+
       this.apiCheckOtp.url = `${this.$api.servers.backend}/api/v1/driver/auth/check-otp`;
       this.apiCheckOtp.callbackReset = () => {
         this.apiCheckOtp.isLoading = true;
@@ -242,12 +256,12 @@ export default {
       this.apiCheckOtp.params = { mobile_no: this.mobile_no, otp: this.otp };
       this.$api.fetch(this.apiCheckOtp);
     },
-    
+
     resendOtp() {
       this.otp = null;
       this.sendOtp();
     },
-    
+
     changeNumber() {
       this.otpSent = false;
       this.otp = null;
@@ -256,7 +270,7 @@ export default {
         clearInterval(this.resendInterval);
       }
     },
-    
+
     startResendTimer() {
       this.resendTimer = 60;
       this.resendInterval = setInterval(() => {
@@ -266,7 +280,7 @@ export default {
         }
       }, 1000);
     },
-    
+
     navigateToPrivacyPolicy(event) {
       event.preventDefault();
       this.$router.push({ name: "PrivacyPolicyView" });
