@@ -150,7 +150,18 @@ const routes = [
           title: "Rides",
         },
       },
-     
+      {
+        path: "rides/:uuid",
+        name: "PassengerBookingView",
+        component: () =>
+          import(
+            /* webpackChunkName: "ride-list-view" */ "@/views/PassengerBookingView.vue"
+          ),
+        props: true,
+        meta: {
+          title: "Read Ride",
+        },
+      },
       {
         path: "privacy-policy",
         name: "PrivacyPolicyView",

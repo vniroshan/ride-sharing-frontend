@@ -228,7 +228,7 @@ export default {
     },
 
     bookRide(ride) {
-      this.$router.push({ name: "RideReadView", params: { id: ride.id } });
+      this.$router.push({ name: "PassengerBookingView", params: { uuid: ride.uuid } });
     },
 
     formatDate(dateString) {
