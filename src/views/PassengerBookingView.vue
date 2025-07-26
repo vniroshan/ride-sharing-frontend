@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-row class="my-6 justify-center">
         <v-col cols="12" md="8" class="text-center">
-          <h2 class="text-h5 font-weight-bold purple"></h2>
+          <h2 class="text-h5 font-weight-bold primary"></h2>
         </v-col>
       </v-row>
       <v-row class="justify-center">

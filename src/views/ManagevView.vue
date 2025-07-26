@@ -6,8 +6,7 @@
             <v-card>
                 <h2 class="text-h5 font-weight-bold" style="color: #4033a7;">Manage booking</h2>
             </v-card>
-          
-        </v-col>
+           </v-col>
       </v-row>
       <v-row class="justify-center">
         <v-col cols="12" md="3">
@@ -43,7 +42,6 @@
               <v-form>
                 <v-card class="mb-6 pa-6" elevation="2" rounded="lg">
                     <v-row>
-                        
                         <v-col cols="12" md="4" lg="7" right><div class="font-weight-bold text-subtitle-1" style="color: #4033a7;">
                                 RB-1234-C
                             </div>
@@ -64,7 +62,6 @@
                 </v-card>
                 <v-card class="mb-6 pa-6" elevation="2" rounded="lg">
                     <v-row>
-                        
                         <v-col cols="12" md="4" lg="7" right><div class="font-weight-bold text-subtitle-1" style="color: #4033a7;">
                                 RB-1234-C
                             </div>
@@ -76,8 +73,8 @@
                             Awaiting
                         </v-chip></v-col>
                     </v-row>
-                    <v-row align="right">
-                        <v-col cols="12" md="2" lg="12" class="d-flex justify-end align-center gap-4">
+                    <v-row >
+                        <v-col align="right" cols="12" md="2" lg="12" class="d-flex justify-end align-center gap-4">
                             <v-btn variant="outlined" color="red accent-4" small class=" me-3 rounded-lg" style="color: white;">Cancel</v-btn>
                             <v-btn variant="outlined" color="#4033a7" small  class=" rounded-lg" style="color: white;">Confirm</v-btn>
                         </v-col>
