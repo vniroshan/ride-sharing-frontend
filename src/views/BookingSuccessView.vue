@@ -1,6 +1,6 @@
 <template>
     <v-container class="py-10">
-        <h2 class="text-h5 font-weight-bold text-center text-indigo">
+        <h2 class="text-h5 font-weight-bold text-center text-indigo" style="color: #4033a7;">
                  Booking submitted successfully
                 </h2>
                      <br/>
