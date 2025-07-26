@@ -7,7 +7,14 @@
       <v-btn color="white" plain v-if="!account" text :to="{name:'LoginView'}" dark>Driver Login</v-btn>
        <v-btn color="white" plain v-else text :to="{name:'LogoutView'}" dark>Logout</v-btn>
     </v-app-bar>
-    <v-main>
+    <v-main 
+    :style="{backgroundImage: `url(${require('@/assets/skyline.png')})`,
+    backgroundSize: 'cover' ,
+    backgroundopacity:'0.5', 
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition:'center',
+    height:'100%',
+    width:'100%'}">
       <router-view :key="$route.fullPath" />
     </v-main>
     <AFooter></AFooter>
