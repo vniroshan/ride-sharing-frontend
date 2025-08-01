@@ -53,6 +53,22 @@ const routes = [
       },
 
       {
+        path: "/RegisterSuccess",
+        name: "RegisterSuccessView",
+        component: () =>
+          import(/* webpackChunkName: "BookingSuccess-view" */ "@/views/RegisterSuccessView.vue"),
+        props: true,
+      },
+
+      {
+        path: "/BookingSuccess",
+        name: "BookingSuccessView",
+        component: () =>
+          import(/* webpackChunkName: "BookingSuccess-view" */ "@/views/BookingSuccessView.vue"),
+        props: true,
+      },
+
+      {
         path: "/manage",
         name: "ManageView",
         component: () =>

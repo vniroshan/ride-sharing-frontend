@@ -3,6 +3,7 @@
     <v-app-bar app color="primary" dark>
       <SiteLogo></SiteLogo>
       <v-spacer></v-spacer>
+      <v-btn class="pr-2" plain color="white" text  :to="{name:'RideList'}" dark>Home</v-btn>
        <v-btn class="pr-2" plain color="white" text  :to="{name:'RideListView'}" dark>Rides</v-btn>
       <v-btn color="white" plain v-if="!account" text :to="{name:'LoginView'}" dark>Driver Login</v-btn>
        <v-btn color="white" plain v-else text :to="{name:'LogoutView'}" dark>Logout</v-btn>
