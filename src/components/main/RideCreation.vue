@@ -1,5 +1,10 @@
 <template>
   <v-container class="ride-create-bg" fluid>
+    <AError
+      v-if="apiRideCreation.isError"
+      :api="apiRideCreation"
+      :callbackReset="() => (apiRideCreation.isError = false)"
+    ></AError>
     <v-row justify="center">
       <v-col cols="12" md="8" lg="6">
         <v-card class="ride-create-card" elevation="2">
@@ -112,6 +117,12 @@ export default {
       seats: v => (v >= 1 && v <= 8) || 'Seats must be between 1 and 8',
       price: v => v > 0 || 'Price must be greater than 0',
     },
+    apiRideCreation: {
+      isLoading: false,
+      isError: false,
+      error: null,
+      url: null,
+    },
   }),
   computed: {
     selectedVehicle() {
@@ -122,10 +133,40 @@ export default {
     createRide() {
       if (!this.$refs.form.validate()) return;
       // Placeholder for submit logic
-      alert('Ride posted! (This is a placeholder)');
-      this.$refs.form.reset();
-      this.rideForm.confirmed = false;
+      this.apiRideCreation.url = `${this.$api.servers.backend}/api/v1/driver/rides/new`;
+      this.apiRideCreation.callbackReset = () => {
+        this.apiRideCreation.isLoading = true;
+        this.apiRideCreation.isError = false;
+        this.apiRideCreation.error = null;
+        this.rideForm.confirmed = false;
+      };
+      this.apiRideCreation.callbackError = (e) => {
+        this.apiRideCreation.isLoading = false;
+        this.apiRideCreation.isError = true;
+        this.apiRideCreation.error = e;
+
+      };
+      this.apiRideCreation.callbackSuccess = (resp) => {
+        this.apiRideCreation.isLoading = false;
+        console.log(resp);
+        alert('Ride posted! (This is a placeholder)');
+        this.$refs.form.reset();
+        this.rideForm.confirmed = false;
+      };
+      this.apiRideCreation.params = {
+        from: this.rideForm.from,
+        to: this.rideForm.to,
+        departureDate: this.rideForm.date,
+        departureTime: '10:00', // subject to change  
+        approxHrs: this.rideForm.journeyHrs,
+        seatCount: this.rideForm.seatCount,
+        chargePerSeat: this.rideForm.chargePerSeat,
+        vehicleUuid: 23456, // subject to change
+        driverUuid: "a2f3f35c-3aad-4f08-971a-c1c49e5d44cf", // remove after pulling from main
+      };
+      this.$api.fetch(this.apiRideCreation);
     },
+
   },
 };
 </script>
