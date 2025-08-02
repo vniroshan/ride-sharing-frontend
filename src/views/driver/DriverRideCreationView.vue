@@ -6,7 +6,7 @@
   import RideCreation from '@/components/main/RideCreation'
 
   export default {
-    name: 'RideCreationView',
+    name: 'DriverRideCreationView',
 
     components: {
       RideCreation,

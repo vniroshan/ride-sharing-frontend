@@ -58,8 +58,12 @@
                   Not registered yet?
                 </div>
                 <div class="text-center">
-                  <v-btn color="primary"  text
-                    small >
+                  <v-btn
+                    color="primary"
+                    text
+                    small
+                    :to="{ name: 'DriverRegView' }"
+                  >
                     Click to register now</v-btn
                   >
                 </div>
@@ -83,9 +87,15 @@
             </div>
             <v-card-text>
               <div>
-                <v-otp-input  v-model="otp" :rules="otpRules" outlined
-                  dense length="6"  :disabled="apiCheckOtp.isLoading"
-                  @keyup.enter="checkOtp"></v-otp-input>
+                <v-otp-input
+                  v-model="otp"
+                  :rules="otpRules"
+                  outlined
+                  dense
+                  length="6"
+                  :disabled="apiCheckOtp.isLoading"
+                  @keyup.enter="checkOtp"
+                ></v-otp-input>
                 <v-btn
                   @click="checkOtp"
                   :loading="apiCheckOtp.isLoading"

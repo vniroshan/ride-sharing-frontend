@@ -1,5 +1,11 @@
 <template>
-  <v-container v-if="!isRegistred" class="driver-reg-bg" fluid>
+  <v-container v-if="!isRegistered" class="driver-reg-bg" fluid>
+    <AError
+      v-if="apiRegister.isError"
+      :api="apiRegister"
+      :callbackReset="() => (apiRegister.isError = false)"
+    ></AError>
+
     <v-row justify="center">
       <v-col cols="12" md="8" lg="6">
         <v-card class="driver-reg-card" elevation="2">
@@ -11,177 +17,228 @@
             <div class="section-title">Personal Information</div>
             <v-form ref="form" v-model="valid">
               <v-row>
-                <v-col cols="12">
+                <v-col cols="12" md="6">
                   <v-text-field 
-                    v-model="driverForm.fullName" 
-                    label="Full Name" 
+                    v-model="driverForm.firstName" 
+                    label="First Name" 
                     outlined 
                     dense 
-                    :rules="[rules.required]" 
+                    :rules="[rules.required]"
+                    :disabled="apiRegister.isLoading"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field 
-                    v-model="driverForm.idNumber" 
-                    label="ID Number" 
+                    v-model="driverForm.lastName" 
+                    label="Last Name" 
                     outlined 
                     dense 
-                    :rules="[rules.required]" 
+                    :rules="[rules.required]"
+                    :disabled="apiRegister.isLoading"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field 
                     v-model="driverForm.mobileNo" 
-                    label="Mobile No" 
+                    label="Mobile Number" 
                     outlined 
                     dense 
-                    :rules="[rules.required, rules.phone]" 
+                    :rules="[rules.required, rules.phone]"
+                    :disabled="apiRegister.isLoading"
+                    placeholder="03001234567"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field 
+                    v-model="driverForm.email" 
+                    label="Email Address (Optional)" 
+                    outlined 
+                    dense 
+                    :rules="[rules.email]"
+                    :disabled="apiRegister.isLoading"
+                    type="email"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field 
+                    v-model="driverForm.drivingLicenceNo" 
+                    label="Driving License Number" 
+                    outlined 
+                    dense 
+                    :rules="[rules.required]"
+                    :disabled="apiRegister.isLoading"
                   />
                 </v-col>
                 <v-col cols="12">
                   <v-text-field 
                     v-model="driverForm.address" 
-                    label="Address" 
+                    label="Complete Address" 
                     outlined 
                     dense 
-                    :rules="[rules.required]" 
+                    :rules="[rules.required]"
+                    :disabled="apiRegister.isLoading"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field 
-                    v-model="driverForm.dob" 
-                    label="Date of Birth" 
-                    type="date" 
+                    v-model="driverForm.city" 
+                    label="City" 
                     outlined 
                     dense 
-                    :rules="[rules.required]" 
+                    :rules="[rules.required]"
+                    :disabled="apiRegister.isLoading"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field 
-                    v-model="driverForm.licenseNumber" 
-                    label="Driving License Number" 
+                    v-model="driverForm.postCode" 
+                    label="Post Code" 
                     outlined 
                     dense 
-                    :rules="[rules.required]" 
-                  />
-                </v-col>
-              </v-row>
-
-              <!-- Vehicle Information Section -->
-              <div class="section-title mt-6">Vehicle Information</div>
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-text-field 
-                    v-model="vehicleForm.vehicleNo" 
-                    label="Vehicle No" 
-                    outlined 
-                    dense 
-                    :rules="[rules.required]" 
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field 
-                    v-model="vehicleForm.model" 
-                    label="Vehicle Model" 
-                    outlined 
-                    dense 
-                    :rules="[rules.required]" 
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field 
-                    v-model="vehicleForm.color" 
-                    label="Vehicle Color" 
-                    outlined 
-                    dense 
-                    :rules="[rules.required]" 
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field 
-                    v-model="vehicleForm.registerNo" 
-                    label="Register No" 
-                    outlined 
-                    dense 
-                    :rules="[rules.required]" 
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field 
-                    v-model="vehicleForm.year" 
-                    label="Year of Vehicle" 
-                    type="number" 
-                    min="1900" 
-                    :max="new Date().getFullYear()" 
-                    outlined 
-                    dense 
-                    :rules="[rules.required, rules.year]" 
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-text-field 
-                    v-model="vehicleForm.seats" 
-                    label="No of Seats" 
-                    type="number" 
-                    min="2" 
-                    max="12" 
-                    outlined 
-                    dense 
-                    :rules="[rules.required, rules.seats]" 
+                    :rules="[rules.required]"
+                    :disabled="apiRegister.isLoading"
+                    placeholder="54000"
                   />
                 </v-col>
               </v-row>
 
               <!-- Upload Photos Section -->
-              <div class="section-title mt-6">Upload Photos</div>
-              <v-row>
-                <v-col cols="12" md="4">
-                  <div class="upload-label">Driver Photo</div>
-                  <v-btn color="primary" block @click="triggerUpload('driver')">
-                    Upload Photo
-                  </v-btn>
-                  <input 
-                    type="file" 
-                    ref="driverPhoto" 
-                    accept="image/*" 
-                    hidden 
-                    @change="handleFileUpload($event, 'driver')"
-                  >
-                  <div v-if="uploadedFiles.driver" class="file-name">
-                    {{ uploadedFiles.driver.name }}
+              <div class="section-title mt-6">Upload Required Documents</div>
+              
+              <!-- Profile Photo -->
+              <v-row class="mb-4">
+                <v-col cols="12">
+                  <div class="upload-section-title">Profile Photo</div>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <div class="upload-container">
+                    <v-btn 
+                      color="primary" 
+                      block 
+                      @click="triggerUpload('profile')"
+                      :disabled="apiRegister.isLoading || uploadingPhoto"
+                      :loading="uploadingPhoto"
+                    >
+                      {{ uploadingPhoto ? 'Uploading...' : 'Upload Profile Photo' }}
+                    </v-btn>
+                    <input 
+                      type="file" 
+                      ref="profilePhoto" 
+                      accept="image/jpeg,image/jpg,image/png" 
+                      hidden 
+                      @change="handleFileUpload($event, 'profile')"
+                    >
+                    <div v-if="uploadedFiles.profile && driverForm.profileImageUrl" class="file-success">
+                      <v-icon color="success" small>mdi-check-circle</v-icon>
+                      Profile photo uploaded successfully
+                    </div>
+                    <div v-if="photoErrors.profile" class="file-error">
+                      <v-icon color="error" small>mdi-alert-circle</v-icon>
+                      {{ photoErrors.profile }}
+                    </div>
                   </div>
                 </v-col>
-                <v-col cols="12" md="4">
-                  <div class="upload-label">Driving License</div>
-                  <v-btn color="primary" block @click="triggerUpload('license')">
-                    Upload Photo
-                  </v-btn>
-                  <input 
-                    type="file" 
-                    ref="licensePhoto" 
-                    accept="image/*" 
-                    hidden 
-                    @change="handleFileUpload($event, 'license')"
-                  >
-                  <div v-if="uploadedFiles.license" class="file-name">
-                    {{ uploadedFiles.license.name }}
+                <v-col cols="12" md="6">
+                  <div class="upload-preview" v-if="previewUrls.profile">
+                    <img :src="previewUrls.profile" alt="Profile Photo Preview" class="preview-image">
+                  </div>
+                  <div v-else class="upload-placeholder">
+                    <v-icon size="48" color="grey lighten-1">mdi-account-circle</v-icon>
+                    <div class="mt-2 grey--text">Profile Photo Preview</div>
+                    <div class="mt-1 caption grey--text">Max size: 5MB</div>
+                    <div class="caption grey--text">JPG, JPEG, PNG only</div>
                   </div>
                 </v-col>
-                <v-col cols="12" md="4">
-                  <div class="upload-label">Vehicle Photos</div>
-                  <v-btn color="primary" block @click="triggerUpload('vehicle')">
-                    Upload Photo
-                  </v-btn>
-                  <input 
-                    type="file" 
-                    ref="vehiclePhoto" 
-                    accept="image/*" 
-                    hidden 
-                    @change="handleFileUpload($event, 'vehicle')"
-                  >
-                  <div v-if="uploadedFiles.vehicle" class="file-name">
-                    {{ uploadedFiles.vehicle.name }}
+              </v-row>
+
+              <!-- License Front -->
+              <v-row class="mb-4">
+                <v-col cols="12">
+                  <div class="upload-section-title">Driving License - Front Side</div>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <div class="upload-container">
+                    <v-btn 
+                      color="primary" 
+                      block 
+                      @click="triggerUpload('licenseFront')"
+                      :disabled="apiRegister.isLoading || uploadingLicenseFront"
+                      :loading="uploadingLicenseFront"
+                    >
+                      {{ uploadingLicenseFront ? 'Uploading...' : 'Upload License Front' }}
+                    </v-btn>
+                    <input 
+                      type="file" 
+                      ref="licenseFrontPhoto" 
+                      accept="image/jpeg,image/jpg,image/png" 
+                      hidden 
+                      @change="handleFileUpload($event, 'licenseFront')"
+                    >
+                    <div v-if="uploadedFiles.licenseFront && driverForm.licenceFrontImageUrl" class="file-success">
+                      <v-icon color="success" small>mdi-check-circle</v-icon>
+                      License front uploaded successfully
+                    </div>
+                    <div v-if="photoErrors.licenseFront" class="file-error">
+                      <v-icon color="error" small>mdi-alert-circle</v-icon>
+                      {{ photoErrors.licenseFront }}
+                    </div>
+                  </div>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <div class="upload-preview" v-if="previewUrls.licenseFront">
+                    <img :src="previewUrls.licenseFront" alt="License Front Preview" class="preview-image">
+                  </div>
+                  <div v-else class="upload-placeholder">
+                    <v-icon size="48" color="grey lighten-1">mdi-card-account-details</v-icon>
+                    <div class="mt-2 grey--text">License Front Preview</div>
+                    <div class="mt-1 caption grey--text">Max size: 5MB</div>
+                    <div class="caption grey--text">JPG, JPEG, PNG only</div>
+                  </div>
+                </v-col>
+              </v-row>
+
+              <!-- License Back -->
+              <v-row class="mb-4">
+                <v-col cols="12">
+                  <div class="upload-section-title">Driving License - Back Side</div>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <div class="upload-container">
+                    <v-btn 
+                      color="primary" 
+                      block 
+                      @click="triggerUpload('licenseBack')"
+                      :disabled="apiRegister.isLoading || uploadingLicenseBack"
+                      :loading="uploadingLicenseBack"
+                    >
+                      {{ uploadingLicenseBack ? 'Uploading...' : 'Upload License Back' }}
+                    </v-btn>
+                    <input 
+                      type="file" 
+                      ref="licenseBackPhoto" 
+                      accept="image/jpeg,image/jpg,image/png" 
+                      hidden 
+                      @change="handleFileUpload($event, 'licenseBack')"
+                    >
+                    <div v-if="uploadedFiles.licenseBack && driverForm.licenceBackImageUrl" class="file-success">
+                      <v-icon color="success" small>mdi-check-circle</v-icon>
+                      License back uploaded successfully
+                    </div>
+                    <div v-if="photoErrors.licenseBack" class="file-error">
+                      <v-icon color="error" small>mdi-alert-circle</v-icon>
+                      {{ photoErrors.licenseBack }}
+                    </div>
+                  </div>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <div class="upload-preview" v-if="previewUrls.licenseBack">
+                    <img :src="previewUrls.licenseBack" alt="License Back Preview" class="preview-image">
+                  </div>
+                  <div v-else class="upload-placeholder">
+                    <v-icon size="48" color="grey lighten-1">mdi-card-account-details-outline</v-icon>
+                    <div class="mt-2 grey--text">License Back Preview</div>
+                    <div class="mt-1 caption grey--text">Max size: 5MB</div>
+                    <div class="caption grey--text">JPG, JPEG, PNG only</div>
                   </div>
                 </v-col>
               </v-row>
@@ -193,10 +250,33 @@
                     color="primary"
                     class="register-btn"
                     large
-                   
+                    :loading="apiRegister.isLoading"
+                    :disabled="!valid || apiRegister.isLoading || !allPhotosUploaded"
                     @click="registerDriver"
                   >
-                    Register Now
+                    {{ apiRegister.isLoading ? 'Registering...' : 'Register Now' }}
+                  </v-btn>
+                  <div v-if="!allPhotosUploaded" class="mt-2 caption grey--text">
+                    Please upload all required documents to continue
+                  </div>
+                  <div class="mt-2 caption grey--text">
+                    Required: Profile photo, License front & back
+                  </div>
+                </v-col>
+              </v-row>
+
+              <!-- Back to Login -->
+              <v-row justify="center" class="mt-4">
+                <v-col cols="12" class="text-center">
+                  <div class="grey--text">Already registered?</div>
+                  <v-btn
+                    color="primary"
+                    text
+                    small
+                    :to="{ name: 'LoginView' }"
+                    :disabled="apiRegister.isLoading"
+                  >
+                    Back to Login
                   </v-btn>
                 </v-col>
               </v-row>
@@ -206,8 +286,31 @@
       </v-col>
     </v-row>
   </v-container>
-  <v-container v-else class="detail-container">
-   <div>Registred</div>
+
+  <!-- Success Page -->
+  <v-container v-else class="success-container" fluid>
+    <v-row justify="center" align="center" class="fill-height">
+      <v-col cols="12" sm="6" md="4">
+        <v-card class="pa-6 text-center" elevation="8">
+          <div class="success-icon mb-4">
+            <v-icon color="success" size="80">mdi-check-circle</v-icon>
+          </div>
+          <h2 class="success-title mb-3">Registration Successful!</h2>
+          <p class="success-message mb-6">
+            Your driver registration has been submitted successfully. 
+            You can now login with your mobile number.
+          </p>
+          <v-btn
+            color="primary"
+            large
+            block
+            :to="{ name: 'LoginView' }"
+          >
+            Go to Login
+          </v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -215,66 +318,246 @@
 export default {
   name: 'DriverReg',
   data: () => ({
-    isRegistred: false,
-    driver:null,
+    isRegistered: false,
     valid: false,
+    uploadingPhoto: false,
+    uploadingLicenseFront: false,
+    uploadingLicenseBack: false,
+    photoErrors: {
+      profile: null,
+      licenseFront: null,
+      licenseBack: null,
+    },
+    previewUrls: {
+      profile: null,
+      licenseFront: null,
+      licenseBack: null,
+    },
+    
     driverForm: {
-      fullName: '',
-      idNumber: '',
+      firstName: '',
+      lastName: '',
       mobileNo: '',
+      email: '',
+      nicNo: '',
+      drivingLicenceNo: '',
       address: '',
-      dob: '',
-      licenseNumber: '',
+      city: '',
+      postCode: '',
+      profileImageUrl: '',
+      licenceFrontImageUrl: '',
+      licenceBackImageUrl: '',
     },
-    vehicleForm: {
-      vehicleNo: '',
-      model: '',
-      color: '',
-      registerNo: '',
-      year: '',
-      seats: '',
-    },
+    
     uploadedFiles: {
-      driver: null,
-      license: null,
-      vehicle: null,
+      profile: null,
+      licenseFront: null,
+      licenseBack: null,
     },
+    
     rules: {
       required: v => !!v || 'This field is required',
-      phone: v => (v && /^[0-9]{10,15}$/.test(v)) || 'Enter valid phone number',
-      year: v => (v >= 1900 && v <= new Date().getFullYear()) || 'Enter valid year',
-      seats: v => (v >= 2 && v <= 12) || 'Seats must be between 2 and 12',
+      phone: v => {
+        if (!v) return 'Mobile number is required';
+      },
+      email: v => {
+        if (!v) return true; // Optional field
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(v) || 'Enter valid email address';
+      },
+    },
+
+    // API configuration
+    apiRegister: {
+      isLoading: false,
+      isError: false,
+      error: null,
+      url: null,
     },
   }),
+
   methods: {
     triggerUpload(type) {
-      this.$refs[`${type}Photo`].click();
-    },
-    handleFileUpload(event, type) {
-      const file = event.target.files[0];
-      if (file) {
-        this.uploadedFiles[type] = file;
+      if (type === 'profile') {
+        this.$refs.profilePhoto.click();
+      } else if (type === 'licenseFront') {
+        this.$refs.licenseFrontPhoto.click();
+      } else if (type === 'licenseBack') {
+        this.$refs.licenseBackPhoto.click();
       }
     },
-    registerDriver() {
-      this.isRegistred =true
-      //if (!this.$refs.form.validate()) return;
+
+    async handleFileUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Validate file
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        this.photoErrors[type] = 'Photo size must be less than 5MB';
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        this.photoErrors[type] = 'Only JPG, JPEG, and PNG files are allowed';
+        return;
+      }
+
+      this.photoErrors[type] = null;
       
-      // Combine form data
-      const formData = {
-        ...this.driverForm,
-        ...this.vehicleForm,
-        photos: this.uploadedFiles
+      // Set loading state based on type
+      if (type === 'profile') {
+        this.uploadingPhoto = true;
+      } else if (type === 'licenseFront') {
+        this.uploadingLicenseFront = true;
+      } else if (type === 'licenseBack') {
+        this.uploadingLicenseBack = true;
+      }
+
+      try {
+        // Create preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.previewUrls[type] = e.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // Convert file to base64 data URI for upload API
+        const base64DataUri = await this.convertFileToBase64(file);
+        
+        // Upload to your API
+        const uploadedUrl = await this.uploadImageToAPI(base64DataUri);
+        
+        this.uploadedFiles[type] = file;
+        
+        // Store URL in appropriate field
+        if (type === 'profile') {
+          this.driverForm.profileImageUrl = uploadedUrl;
+        } else if (type === 'licenseFront') {
+          this.driverForm.licenceFrontImageUrl = uploadedUrl;
+        } else if (type === 'licenseBack') {
+          this.driverForm.licenceBackImageUrl = uploadedUrl;
+        }
+        
+      } catch (error) {
+        this.photoErrors[type] = 'Failed to upload photo. Please try again.';
+        console.error('Upload error:', error);
+      } finally {
+        // Reset loading state
+        if (type === 'profile') {
+          this.uploadingPhoto = false;
+        } else if (type === 'licenseFront') {
+          this.uploadingLicenseFront = false;
+        } else if (type === 'licenseBack') {
+          this.uploadingLicenseBack = false;
+        }
+      }
+    },
+
+    convertFileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // Keep the complete data URI (data:image/jpeg;base64,...)
+          // Cloudinary needs this to identify the file type
+          resolve(reader.result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    },
+
+    async uploadImageToAPI(base64DataUri) {
+      const apiUpload = {
+        url: `${this.$api.servers.backend}/api/v1/document/upload`,
+        isLoading: false,
+        isError: false,
+        error: null,
       };
 
-      // Placeholder for API call
-      console.log('Driver registration data:', formData);
-      alert('Driver registration submitted! (Placeholder)');
-      
-      // Reset form after submission
-      this.$refs.form.reset();
-      this.uploadedFiles = { driver: null, license: null, vehicle: null };
+      return new Promise((resolve, reject) => {
+        apiUpload.callbackReset = () => {
+          apiUpload.isLoading = true;
+          apiUpload.isError = false;
+          apiUpload.error = null;
+        };
+        
+        apiUpload.callbackError = (e) => {
+          apiUpload.isLoading = false;
+          apiUpload.isError = true;
+          apiUpload.error = e;
+          reject(e);
+        };
+        
+        apiUpload.callbackSuccess = (resp) => {
+          apiUpload.isLoading = false;
+          if (resp && resp.image_url) {
+            resolve(resp.image_url);
+          } else {
+            reject(new Error('No image URL returned from server'));
+          }
+        };
+
+        // Send the complete data URI to Cloudinary
+        apiUpload.params = {
+          image: base64DataUri
+        };
+
+        this.$api.fetch(apiUpload);
+      });
     },
+
+    async registerDriver() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+
+      this.apiRegister.url = `${this.$api.servers.backend}/api/v1/driver/auth/register`;
+      this.apiRegister.callbackReset = () => {
+        this.apiRegister.isLoading = true;
+        this.apiRegister.isError = false;
+        this.apiRegister.error = null;
+      };
+      
+      this.apiRegister.callbackError = (e) => {
+        this.apiRegister.isLoading = false;
+        this.apiRegister.isError = true;
+        this.apiRegister.error = e;
+        console.error('Registration error:', e);
+      };
+      
+      this.apiRegister.callbackSuccess = (resp) => {
+        this.apiRegister.isLoading = false;
+        console.log('Registration successful:', resp);
+        this.isRegistered = true;
+      };
+
+      // Prepare data according to API schema
+      this.apiRegister.params = {
+        firstName: this.driverForm.firstName,
+        lastName: this.driverForm.lastName,
+        mobileNo: this.driverForm.mobileNo,
+        email: this.driverForm.email || undefined,
+        drivingLicenceNo: this.driverForm.drivingLicenceNo,
+        imageUrl: this.driverForm.profileImageUrl || undefined,
+        licenceFrontImageUrl: this.driverForm.licenceFrontImageUrl || undefined,
+        licenceBackImageUrl: this.driverForm.licenceBackImageUrl || undefined,
+        address: this.driverForm.address,
+        city: this.driverForm.city,
+        post_code: this.driverForm.postCode,
+      };
+
+      this.$api.fetch(this.apiRegister);
+    },
+  },
+
+  computed: {
+    allPhotosUploaded() {
+      return this.driverForm.profileImageUrl && 
+             this.driverForm.licenceFrontImageUrl && 
+             this.driverForm.licenceBackImageUrl;
+    }
   },
 };
 </script>
@@ -286,11 +569,13 @@ export default {
   padding-top: 40px;
   padding-bottom: 40px;
 }
+
 .driver-reg-card {
   border-radius: 18px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   padding: 16px 24px 24px 24px;
 }
+
 .driver-reg-title {
   font-size: 2rem;
   font-weight: 700;
@@ -298,6 +583,7 @@ export default {
   width: 100%;
   text-align: center;
 }
+
 .section-title {
   font-size: 1.3rem;
   font-weight: 600;
@@ -307,20 +593,68 @@ export default {
   border-bottom: 2px solid #e0e0e0;
   padding-bottom: 8px;
 }
-.upload-label {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #555;
-  text-align: center;
+
+.upload-container {
+  height: 100%;
 }
-.file-name {
-  font-size: 0.8rem;
-  color: #666;
+
+.upload-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0074e7;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.upload-preview {
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-placeholder {
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.file-success {
+  font-size: 0.9rem;
+  color: #4caf50;
   margin-top: 8px;
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
+
+.file-error {
+  font-size: 0.9rem;
+  color: #f44336;
+  margin-top: 8px;
+  text-align: center;
+}
+
 .register-btn {
   background: #0074e7 !important;
   color: #fff !important;
@@ -330,5 +664,61 @@ export default {
   min-width: 220px;
   box-shadow: 0 2px 8px rgba(75,63,174,0.08);
   margin-top: 16px;
+}
+
+.success-container {
+  background: #f8f8fb;
+  min-height: 100vh;
+}
+
+.success-icon {
+  animation: bounce 0.6s ease-in-out;
+}
+
+.success-title {
+  color: #0074e7;
+  font-weight: 600;
+}
+
+.success-message {
+  color: #666;
+  line-height: 1.5;
+}
+
+.fill-height {
+  min-height: 80vh;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 600px) {
+  .driver-reg-card {
+    margin: 16px;
+    padding: 12px 16px 16px 16px;
+  }
+  
+  .driver-reg-title {
+    font-size: 1.5rem;
+  }
+  
+  .upload-preview,
+  .upload-placeholder {
+    height: 150px;
+  }
+  
+  .register-btn {
+    min-width: 180px;
+    font-size: 1rem;
+  }
 }
 </style>

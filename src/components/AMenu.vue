@@ -154,7 +154,7 @@ export default {
     this.menu.push({
       name: "Create Ride",
       icon: "mdi-car-plus",
-      route: { name: "RideCreationView" },
+      route: { name: "DriverRideCreationView" },
       permission: 0,
     });
     this.menu.push({

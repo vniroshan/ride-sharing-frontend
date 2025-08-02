@@ -83,7 +83,24 @@
                 <v-row align="center">
                   <!-- Car Icon -->
                   <v-col cols="12" md="2" class="text-center">
-                    <v-avatar size="80" color="grey lighten-3">
+                    <v-avatar
+                      v-if="
+                        ride.vehicles.vehicle_images &&
+                        ride.vehicles.vehicle_images[0]
+                      "
+                      size="80"
+                      color="grey lighten-3"
+                    >
+                      <v-img
+                        :key="idx"
+                        :src="ride.vehicles.vehicle_images[0].image_url"
+                        width="40"
+                        height="40"
+                        class="mr-1 rounded elevation-1"
+                        contain
+                      ></v-img>
+                    </v-avatar>
+                    <v-avatar v-else size="80" color="grey lighten-3">
                       <v-icon size="40" color="primary">mdi-car</v-icon>
                     </v-avatar>
                   </v-col>
@@ -98,11 +115,13 @@
                     <div class="ride-info grey--text text--darken-1">
                       <div class="mb-1">
                         <v-icon small class="mr-1">mdi-calendar-clock</v-icon>
-                        {{ ride.departure_date }} Departure around {{ ride.departure_time }}
+                        {{ ride.departure_date }} Departure around
+                        {{ ride.departure_time }}
                       </div>
                       <div class="mb-2">
                         <v-icon small class="mr-1">mdi-car-info</v-icon>
-                        {{ ride.vehicles.vehicle_no }} - {{ ride.vehicles.type }}
+                        {{ ride.vehicles.vehicle_no }} -
+                        {{ ride.vehicles.type }}
                       </div>
                       <v-chip
                         small
@@ -228,7 +247,10 @@ export default {
     },
 
     bookRide(ride) {
-      this.$router.push({ name: "PassengerBookingView", params: { uuid: ride.uuid } });
+      this.$router.push({
+        name: "PassengerBookingView",
+        params: { uuid: ride.uuid },
+      });
     },
 
     formatDate(dateString) {

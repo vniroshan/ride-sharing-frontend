@@ -2,8 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import LayoutMain from "../layouts/LayoutMain.vue";
 import LayoutBlank from "../layouts/LayoutBlank.vue";
-// import LayoutConsole from "../layouts/LayoutConsole.vue";
-import DriverVehicles from '@/views/driver/DriverVehicles.vue';
+import DriverVehicles from "@/views/driver/DriverVehicles.vue";
 
 //BOC:[state]
 import store from "./../store/index";
@@ -25,7 +24,7 @@ const notLoggedIn = function (to, from, next) {
 Vue.use(VueRouter);
 
 const routes = [
-   {
+  {
     path: "/",
     component: LayoutBlank,
     beforeEnter: multiguard([notLoggedIn]),
@@ -56,7 +55,9 @@ const routes = [
         path: "/RegisterSuccess",
         name: "RegisterSuccessView",
         component: () =>
-          import(/* webpackChunkName: "BookingSuccess-view" */ "@/views/RegisterSuccessView.vue"),
+          import(
+            /* webpackChunkName: "BookingSuccess-view" */ "@/views/RegisterSuccessView.vue"
+          ),
         props: true,
       },
 
@@ -64,7 +65,9 @@ const routes = [
         path: "/BookingSuccess",
         name: "BookingSuccessView",
         component: () =>
-          import(/* webpackChunkName: "BookingSuccess-view" */ "@/views/BookingSuccessView.vue"),
+          import(
+            /* webpackChunkName: "BookingSuccess-view" */ "@/views/BookingSuccessView.vue"
+          ),
         props: true,
       },
 
@@ -72,15 +75,9 @@ const routes = [
         path: "/manage",
         name: "ManageView",
         component: () =>
-          import(/* webpackChunkName: "Manage-view" */ "@/views/ManagevView.vue"),
-        props: true,
-      },
-
-       {
-        path: "/book",
-        name: "PassengerBooking",
-        component: () =>
-          import(/* webpackChunkName: "book-view" */ "@/views/PassengerBookingView.vue"),
+          import(
+            /* webpackChunkName: "Manage-view" */ "@/views/ManagevView.vue"
+          ),
         props: true,
       },
       {
@@ -90,11 +87,13 @@ const routes = [
           import(/* webpackChunkName: "login-view" */ "@/views/LoginView.vue"),
         props: true,
       },
-       {
+      {
         path: "/register",
         name: "DriverRegView",
         component: () =>
-          import(/* webpackChunkName: "register-view" */ "@/views/DriverRegView.vue"),
+          import(
+            /* webpackChunkName: "register-view" */ "@/views/DriverRegView.vue"
+          ),
         props: true,
       },
     ],
@@ -119,10 +118,22 @@ const routes = [
       },
       {
         path: "create-ride",
-        name: "RideCreationView",
+        name: "DriverRideCreationView",
         component: () =>
           import(
-            /* webpackChunkName: "ride-creation-view" */ "@/views/RideCreationView.vue"
+            /* webpackChunkName: "ride-creation-view" */ "@/views/driver/DriverRideCreationView.vue"
+          ),
+        props: true,
+        meta: {
+          title: "Create Ride",
+        },
+      },
+         {
+        path: "manage-ride/:uuid",
+        name: "DriverManageBookingView",
+        component: () =>
+          import(
+            /* webpackChunkName: "ride-manage-view" */ "@/views/driver/DriverManageBookingView.vue"
           ),
         props: true,
         meta: {
@@ -130,14 +141,14 @@ const routes = [
         },
       },
       {
-  path: '/driver/vehicles',
-  name: 'DriverVehiclesView',
-  component: DriverVehicles,
-  meta: { 
-    requiresAuth: true,
-    role: 'driver' 
-  }
-},
+        path: "/driver/vehicles",
+        name: "DriverVehiclesView",
+        component: DriverVehicles,
+        meta: {
+          requiresAuth: true,
+          role: "driver",
+        },
+      },
       {
         path: "logout",
         name: "LogoutView",
@@ -147,7 +158,6 @@ const routes = [
           ),
         props: true,
       },
-      
     ],
   },
   {
@@ -191,25 +201,27 @@ const routes = [
         },
       },
       {
-  path: "records",
-  name: "DriverRecordsView",
-  component: () => import(
-    /* webpackChunkName: "driver-records-view" */ "@/views/driver/DriverRecordsView.vue"
-  ),
-  meta: {
-    title: "Driver Records",
-  },
-},
-{
-  path: "records/:id",
-  name: "DriverRecordsView",
-  component: () => import(
-    /* webpackChunkName: "driver-record-detail" */ "@/views/driver/DriverRecordsView.vue"
-  ),
-  meta: {
-    title: "Driver Details",
-  },
-},
+        path: "records",
+        name: "DriverRecordsView",
+        component: () =>
+          import(
+            /* webpackChunkName: "driver-records-view" */ "@/views/driver/DriverRecordsView.vue"
+          ),
+        meta: {
+          title: "Driver Records",
+        },
+      },
+      {
+        path: "records/:id",
+        name: "DriverRecordsView",
+        component: () =>
+          import(
+            /* webpackChunkName: "driver-record-detail" */ "@/views/driver/DriverRecordsView.vue"
+          ),
+        meta: {
+          title: "Driver Details",
+        },
+      },
       {
         path: "terms-of-service",
         name: "TermsOfServiceView",
