@@ -190,7 +190,7 @@
                           variant="outlined"
                           color="grey lighten-1"
                           small
-                          class="rounded-lg"
+                          class="rounded-lg mt-3"
                           @click="viewBookingDetails(booking)"
                         >
                           Details
