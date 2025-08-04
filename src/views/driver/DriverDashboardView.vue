@@ -438,7 +438,7 @@ export default {
 
     viewRideDetails(ride) {
       this.$router.push({
-        name: "DriverRideDetailsView",
+        name: "DriverManageBookingView",
         params: { uuid: ride.uuid },
       });
     },

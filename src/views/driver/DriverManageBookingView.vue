@@ -157,7 +157,7 @@
                           variant="outlined"
                           color="red accent-4"
                           small
-                          class="rounded-lg"
+                          class="rounded-lg mt-3"
                           :loading="cancelLoading === booking.uuid"
                           @click="confirmCancelBooking(booking)"
                         >
@@ -169,7 +169,7 @@
                           variant="outlined"
                           color="primary"
                           small
-                          class="rounded-lg"
+                          class="rounded-lg mt-3"
                           @click="confirmBooking(booking)"
                         >
                           Confirm
@@ -180,10 +180,22 @@
                           variant="outlined"
                           color="grey lighten-1"
                           small
-                          class="rounded-lg"
+                          class="rounded-lg mt-3"
                           @click="onboardPassenger(booking)"
                         >
                           Onboard
+                        </v-btn>
+                        
+                        <v-btn
+                          v-if="canComplete(booking.status)"
+                          variant="outlined"
+                          color="success"
+                          small
+                          class="rounded-lg mt-3"
+                          :loading="cancelLoading === booking.uuid"
+                          @click="completeBooking(booking)"
+                        >
+                          Complete
                         </v-btn>
                         
                         <v-btn
@@ -492,6 +504,26 @@ export default {
         }
       });
     },
+    completeBooking(booking) {
+      const id = booking.uuid;
+      this.cancelLoading = id;
+      this.$api.fetch({
+        method: 'POST',
+        url: `${this.$api.servers.backend}/api/v1/driver/rides/${this.rideUuid}/bookings/complete`,
+        params: { uuid: id },
+        callbackReset: () => { this.cancelLoading = id },
+        callbackSuccess: () => {
+          this.cancelLoading = null;
+          this.showSnackbar('Booking completed successfully', 'success');
+          this.fetchRideDetails();
+        },
+        callbackError: (error) => {
+          this.cancelLoading = null;
+          const msg = error.response?.data?.message || 'Failed to complete booking';
+          this.showSnackbar(msg, 'error');
+        }
+      });
+    },
     viewBookingDetails(booking) {
       this.selectedBooking = booking;
       this.detailsDialog = true;
@@ -514,6 +546,9 @@ export default {
     canOnboard(status) {
       return ['confirmed'].includes(status?.toLowerCase());
     },
+    canComplete(status) {
+      return ['onboarded'].includes(status?.toLowerCase());
+    },
     getStatusColor(status) {
       return {
         'confirmed': 'light-green accent-4',
@@ -521,7 +556,7 @@ export default {
         'pending': 'orange lighten-1',
         'cancelled': 'red lighten-1',
         'completed': 'blue lighten-1',
-        'onboard': 'green darken-1'
+        'onboarded': 'green darken-1'
       }[status?.toLowerCase()] || 'grey lighten-1';
     },
     getStatusTextColor(status) {
@@ -541,7 +576,8 @@ export default {
       return {
         'cancelled': 'red lighten-5',
         'completed': 'blue lighten-5',
-        'confirmed': 'light-green lighten-5'
+        'confirmed': 'light-green lighten-5',
+        'onboard': 'green lighten-5'
       }[status?.toLowerCase()] || '';
     },
     formatDate(date) {
@@ -656,6 +692,10 @@ export default {
 
 .v-card.blue.lighten-5 {
   border-left-color: #2196f3;
+}
+
+.v-card.green.lighten-5 {
+  border-left-color: #4caf50;
 }
 
 /* Loading states */

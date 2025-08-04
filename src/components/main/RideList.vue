@@ -206,8 +206,8 @@ export default {
 
   mounted() {
     // Initialize with current date
-    const today = new Date();
-    this.date = today.toISOString().split("T")[0];
+    // const today = new Date();
+    // this.date = today.toISOString().split("T")[0];
   },
 
   beforeDestroy() {

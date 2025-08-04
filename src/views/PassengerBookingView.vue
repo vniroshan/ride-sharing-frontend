@@ -14,7 +14,7 @@
         <v-col cols="12" md="6" class="text-center">
           <v-alert type="error" prominent>
             <div class="text-h6">Failed to load ride information</div>
-            <div class="mt-2">{{ apiRideInfo.error?.message || 'An error occurred' }}</div>
+            <div class="mt-2">{{ apiRideInfo.error?.message}}</div>
             <v-btn color="white" text @click="fetchRideInfo" class="mt-3">
               Try Again
             </v-btn>
@@ -119,10 +119,10 @@
                     <span style="color: #BDBDBE;">Vehicle model:</span><br/>
                     <strong>{{ rideInfo.vehicles?.type || 'N/A' }}</strong>
                   </div><br/>
-                  <div style="font-size: large;">
+                  <!-- <div style="font-size: large;">
                     <span style="color: #BDBDBE;">Reg no:</span><br/>
                     <strong>{{ rideInfo.vehicles?.reg_no || 'N/A' }}</strong>
-                  </div><br/>
+                  </div><br/> -->
                   <div style="font-size: large;">
                     <span style="color: #BDBDBE;">Driver:</span><br/>
                     <strong>{{ rideInfo.drivers.first_name }} {{ rideInfo.drivers.last_name }}</strong>
@@ -429,12 +429,12 @@ export default {
         console.error('Booking failed:', error);
         
         // Extract error message from response
-        const errorMessage = error.response?.data?.message || 
-                           error.response?.data?.error || 
-                           error.message || 
-                           'An error occurred while booking';
+        // const errorMessage = error.response?.data?.message || 
+        //                    error.response?.data?.error || 
+        //                    error.message || 
+        //                    'An error occurred while booking';
         
-        this.bookingError = errorMessage;
+        this.bookingError = error;
         this.showErrorDialog = true;
         this.showSnackbar('Booking failed', 'error');
       };
@@ -448,7 +448,7 @@ export default {
         this.showSnackbar('Booking confirmed successfully!', 'success');
         
         // Update ride info to reflect new booking
-        this.fetchRideInfo();
+        this.$router.push({name: 'RideListView'});
       };
       
       // Prepare booking data

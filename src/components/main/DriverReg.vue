@@ -124,7 +124,7 @@
                     <input 
                       type="file" 
                       ref="profilePhoto" 
-                      accept="image/jpeg,image/jpg,image/png" 
+                      accept="image/jpeg,image/jpg,image/png,image/webp" 
                       hidden 
                       @change="handleFileUpload($event, 'profile')"
                     >
@@ -170,7 +170,7 @@
                     <input 
                       type="file" 
                       ref="licenseFrontPhoto" 
-                      accept="image/jpeg,image/jpg,image/png" 
+                      accept="image/jpeg,image/jpg,image/png,image/webp" 
                       hidden 
                       @change="handleFileUpload($event, 'licenseFront')"
                     >
@@ -216,7 +216,7 @@
                     <input 
                       type="file" 
                       ref="licenseBackPhoto" 
-                      accept="image/jpeg,image/jpg,image/png" 
+                      accept="image/jpeg,image/jpg,image/png,image/webp" 
                       hidden 
                       @change="handleFileUpload($event, 'licenseBack')"
                     >
@@ -392,13 +392,13 @@ export default {
       if (!file) return;
 
       // Validate file
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 1 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        this.photoErrors[type] = 'Photo size must be less than 5MB';
+        this.photoErrors[type] = 'Photo size must be less than 1MB';
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
         this.photoErrors[type] = 'Only JPG, JPEG, and PNG files are allowed';
         return;

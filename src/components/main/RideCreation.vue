@@ -32,7 +32,7 @@
                   <v-text-field v-model="rideForm.seatCount" label="Seat count" type="number" outlined dense :rules="[rules.required, rules.seats]" min="1" max="8" />
                 </v-col>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="rideForm.chargePerSeat" label="Charge per seat" type="number" outlined dense :rules="[rules.required, rules.price]" min="1" step="0.5" />
+                  <v-text-field v-model="rideForm.chargePerSeat"  prefix="£" label="Charge per seat" type="number" outlined dense :rules="[rules.required, rules.price]" min="1" step="0.5" />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field v-model="rideForm.departureTime" label="Departure Time" type="time" outlined dense :rules="[rules.required]" />
